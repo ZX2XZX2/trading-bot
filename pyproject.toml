@@ -1,0 +1,24 @@
+[project]
+name = "trading-bot"
+version = "0.1.0"
+description = "Minimal trading bot connecting to Interactive Brokers in paper trading mode."
+authors = [
+    { name="Your Name", email="your.email@example.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "ib_insync"
+]
+
+[tool.black]
+line-length = 88
+target-version = ["py313"]
+include = '\.pyi?$'
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
