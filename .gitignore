@@ -15,5 +15,8 @@ build/
 dist/
 *.egg-info/
 
+# Poetry artifacts
+poetry.lock
+
 # Logs
 *.log
