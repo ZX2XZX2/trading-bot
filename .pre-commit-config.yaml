@@ -1,0 +1,14 @@
+repos:
+  - repo: git@github.com:astral-sh/ruff-pre-commit.git
+    rev: v0.11.7  # Use latest compatible with your ruff version
+    hooks:
+      - id: ruff
+        args: ["--fix"]  # Automatically fix what can be fixed
+
+  - repo: local
+    hooks:
+      - id: detect-secrets-scan
+        name: Detect Secrets
+        entry: poetry run detect-secrets-hook --baseline .secrets.baseline
+        language: system
+        files: .*\.(py|txt|md|toml|yaml|yml)
