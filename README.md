@@ -2,9 +2,8 @@
 
 IB trading bot (paper or live trading mode)
 
-## Setup
+### Quick Setup
 
 ```bash
-poetry install
-poetry env activate
+./scripts/setup_dev_env.sh
 ```
