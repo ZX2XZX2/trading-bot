@@ -1,6 +1,7 @@
 from ib_insync import IB, Contract, Ticker
 from trading_bot.connection import safe_connect, disconnect
 from trading_bot.order_manager import OrderManager
+from strategy_lab.strategies import discover_strategies
 from trading_bot.utils import get_logger
 
 logger = get_logger()
@@ -47,26 +48,13 @@ class TradingSession:
         """Convenience function to submit a simple market order."""
         return self.order_manager.submit_market_order(symbol, quantity, action)
 
-    def run_basic_strategy(self, symbol: str, target_price: float, quantity: int = 1):
-        """
-        Example strategy:
-        - If current price <= target_price
-        - Submit a market BUY order
-        """
-        logger.info(f"Running basic strategy for {symbol}... Target price: {target_price}")
-        self.subscribe_market_data(symbol)
-
-        self.ib.sleep(2)  # Allow market data to load
-
-        current_price = self.get_last_price(symbol)
-        logger.info(f"Current price of {symbol}: {current_price}")
-
-        if current_price is None:
-            logger.warning("Could not retrieve price. Strategy aborted.")
+    def run_strategy_by_name(self, strategy_name: str, **kwargs):
+        strategies = discover_strategies()
+        if strategy_name not in strategies:
+            logger.error(f"Strategy '{strategy_name}' not found.")
             return
 
-        if current_price <= target_price:
-            logger.info(f"Price {current_price} <= Target {target_price}. Submitting BUY order.")
-            self.place_market_order(symbol, quantity)
-        else:
-            logger.info(f"Price {current_price} > Target {target_price}. No action taken.")
+        logger.info(f"Launching strategy: {strategy_name}")
+        strategy_class = strategies[strategy_name]
+        strategy = strategy_class(self)
+        strategy.run(**kwargs)
